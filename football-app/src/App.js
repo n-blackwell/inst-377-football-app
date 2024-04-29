@@ -1,30 +1,13 @@
+import React from 'react';
 import { useEffect, useState } from "react";
+import HomePage from './components/HomePage';
 
 function App() {
-  const [items, setItems] = useState([])
-
-  useEffect(() => {
-    fetch("/api/items")
-      .then((res) => res.json())
-      .then(data => setItems(data))
-
-  }, [])
-
-  function renderItems() {
-    return items.map((item, i) => {
-      return <div key={i}>
-        <h3>{item.name}</h3>
-        <p>Price: {item.price}</p>
-      </div>
-    })
-  }
-
-  return (
-    <main>
-      <h1>Example Page</h1>
-      {renderItems()}
-    </main>
-  );
+    return (
+        <>
+            <HomePage />
+        </>
+    )
 }
 
 export default App;
