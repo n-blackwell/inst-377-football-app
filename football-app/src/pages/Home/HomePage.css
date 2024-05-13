@@ -1,3 +1,19 @@
-.home-card-div {
-    width: 60%;
+.home-card-div {}
+
+.top-section {
+    margin-top: 15px;
+
+}
+
+.matchup-div {
+    border: solid black 2px;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.matchup-div h2 {
+    margin-left: 20px;
+    margin-right: 20px;
 }

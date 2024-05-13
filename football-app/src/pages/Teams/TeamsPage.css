@@ -1,0 +1,10 @@
+.roster-table {
+    width: 40%;
+    float: left;
+}
+
+.team-info-table {
+    width: 50%;
+    float: right;
+    margin-right: 10px
+}

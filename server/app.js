@@ -21,6 +21,11 @@ app.get('/api/items', (req, res) => {
 
 })
 
+app.get('/api/team/dailyInfo', (req, res) => {
+
+})
+
+
 app.listen(port, () => {
     console.log(`Server Listening on Port ${port}`)
 })
