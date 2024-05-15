@@ -2,7 +2,7 @@ import React from "react"
 import Table from 'react-bootstrap/Table';
 import './TeamsPage.css'
 import { useEffect, useState } from "react";
-import { useFetcher } from "react-router-dom";
+// import { useFetcher } from "react-router-dom";
 
 function PlayerData({ playersRes }) {
     return (
@@ -26,7 +26,7 @@ function PlayerData({ playersRes }) {
 function TeamsPage() {
     const apiKey = '10755b2a08msh15dff173eafe850p158f43jsnf3d99db20514'
     const playerUrl = "https://api-football-v1.p.rapidapi.com/v3/players/squads?team=33"
-    const statsUrl = "http://localhost:9000/team/info?teamID=33&LeagueID=39"
+    const statsUrl = "http://localhost:9000/team/info?teamID=33&leagueID=39"
 
     const [players, setPlayers] = useState([])
     const [stats, setStats] = useState([])
