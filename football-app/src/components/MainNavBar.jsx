@@ -12,9 +12,7 @@ function MainNavBar() {
                     <Nav.Link href="/">Home</Nav.Link>
                     <Nav.Link href="/Teams">Teams</Nav.Link>
                     <Nav.Link href="/Players">Players</Nav.Link>
-                    <Nav.Link href="/Leagues">Leagues</Nav.Link>
                     <Nav.Link href="/About">About</Nav.Link>
-                    <Nav.Link href="/Help">Help</Nav.Link>
                 </Nav>
             </Container>
         </Navbar>
