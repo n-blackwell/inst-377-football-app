@@ -7,15 +7,17 @@
 
 }
 
-.matchup-div {
-    border: solid black 2px;
-    max-width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
+.fixtures {
     text-align: center;
+    animation: fade-in 3s;
 }
 
-.matchup-div h2 {
-    margin-left: 20px;
-    margin-right: 20px;
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 100;
+    }
 }

@@ -3,21 +3,24 @@ import Container from "react-bootstrap/esm/Container";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card'
+import ListGroup from 'react-bootstrap/ListGroup';
 import './HomePage.css'
 
 function HomePage() {
-    const [fixtureCount, setFixtureCount] = useState(0)
+    const [fixtureCount, setFixtureCount] = useState(2)
     const [fixtureData, setFixtureData] = useState({})
-    const [maxFixtureCount, setMaxFixtureCount] = (useState(9999999))
+    const [maxFixtureCount, setMaxFixtureCount] = useState(9999999)
+    const [isLoading, setIsLoading] = useState(true)
 
-    const today = formatDate(new Date)
+    const today = formatDate(new Date())
     const fixtureUrl = `https://api-football-v1.p.rapidapi.com/v3/fixtures?date=${today}`
 
     const fetchFixtures = async (fixtureUrl) => {
+        console.log('Fetching')
         const res = await fetch(fixtureUrl, {
             method: 'GET',
             headers: {
-                'X-RapidAPI-Key': '10755b2a08msh15dff173eafe850p158f43jsnf3d99db20514',
+                'X-RapidAPI-Key': '2fef88074dmsh152cc0bbbaae36cp19843cjsn22175ba2aeef',
                 'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
             }
         })
@@ -26,49 +29,55 @@ function HomePage() {
         data = data['response']
         setFixtureData(data)
         setMaxFixtureCount(Object.keys(fixtureData).length)
+        setIsLoading(false)
     }
 
-    useEffect(() => {
-        setFixtureCount(0)
+    useMemo(() => {
+        setFixtureCount(2)
         fetchFixtures(fixtureUrl)
     }, [])
 
     useEffect(() => {
-        const interval1 = setInterval(() => setFixtureCount((fixtureCount === maxFixtureCount) ? 0 : fixtureCount + 1), 10000);
+        const interval1 = setInterval(() => setFixtureCount((fixtureCount === maxFixtureCount) ? 0 : fixtureCount + 3), 10000);
+        console.log(fixtureCount)
 
         return () => {
             clearInterval(interval1);
         };
-    }, [fixtureCount]);
+    }, [fixtureCount, maxFixtureCount]);
 
     return (
         <>
-            <h1>{fixtureCount}</h1>
             <div className='top-section'>
                 <h1>Welcome to the Football App</h1>
             </div>
-            <div className="home-card-div">
+            <div className="fixtures">
                 <br />
                 <Container fluid="sm">
                     <Row>
                         <Col>
-                            {/* <HomeCard
+                            <HomeCard
                                 fixtureData={fixtureData}
                                 fixtureCount={fixtureCount}
-                            /> */}
+                                isLoading={isLoading}
+                            />
                         </Col>
                         <Col>
-                            {/* <HomeCard /> */}
+                            <HomeCard
+                                fixtureData={fixtureData}
+                                fixtureCount={fixtureCount + -1}
+                                isLoading={isLoading}
+                            />
                         </Col>
                         <Col>
-                            {/* <HomeCard /> */}
+                            <HomeCard
+                                fixtureData={fixtureData}
+                                fixtureCount={fixtureCount + -2}
+                                isLoading={isLoading}
+                            />
                         </Col>
                     </Row>
                 </Container>
-            </div>
-            <div className='matchup-div'>
-                <h2>Matchups</h2>
-                <h4>Team X V Team Y</h4>
             </div>
         </>
     )
@@ -88,33 +97,34 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-function HomeCard(fixtureData, fixtureCount) {
+function HomeCard({ fixtureData, fixtureCount, isLoading }) {
+    if (isLoading) {
+        return
+    }
+    console.log('done loading')
 
-
-    const limiter = Math.floor(fixtureCount / 100)
-    console.log("limiter: ", limiter, "limitedFixtureData: ", fixtureData[limiter])
-
-    const homeName = fixtureData[fixtureCount][limiter]['teams']['home']['name']
-    const awayName = fixtureData[fixtureCount][limiter]['teams']['away']['name']
-    const homeGoals = fixtureData[fixtureCount][limiter]['goals']['home']
-    const awayGoals = fixtureData[fixtureCount][limiter]['goals']['home']
-    const homeLogo = fixtureData[fixtureCount][limiter]['teams']['home']['logo']
-    const awayLogo = fixtureData[fixtureCount][limiter]['teams']['home']['logo']
-    const stadium = fixtureData[fixtureCount][limiter]['fixture']['venue']['name']
-    const city = fixtureData[fixtureCount][limiter]['fixture']['venue']['city']
-    const matchStatus = fixtureData[fixtureCount][limiter]['fixture']['status']['short']
-    const elapsed = fixtureData[fixtureCount][limiter]['fixture']['staus']['elapsed']
+    const homeName = fixtureData[fixtureCount]['teams']['home']['name']
+    const awayName = fixtureData[fixtureCount]['teams']['away']['name']
+    const homeGoals = fixtureData[fixtureCount]['goals']['home']
+    const awayGoals = fixtureData[fixtureCount]['goals']['home']
+    const homeLogo = fixtureData[fixtureCount]['teams']['home']['logo']
+    const awayLogo = fixtureData[fixtureCount]['teams']['home']['logo']
+    const stadium = fixtureData[fixtureCount]['fixture']['venue']['name']
+    const city = fixtureData[fixtureCount]['fixture']['venue']['city']
+    const matchStatus = fixtureData[fixtureCount]['fixture']['status']['short']
+    const elapsed = fixtureData[fixtureCount]['fixture']['status']['elapsed']
 
 
     return (
         <Card style={{ width: '24rem' }}>
-            <Card.Img variant="top" src={(homeGoals > awayGoals) ? homeLogo : awayLogo} />
+            <Card.Img variant="top" height="382px" width="382px" src={(homeGoals > awayGoals) ? homeLogo : awayLogo} />
             <Card.Header>{homeName} vs {awayName}</Card.Header>
             <Card.Body>
-                <Card.Title>Score: {homeName + ": " + homeGoals} | {awayName + ": " + awayGoals} || {matchStatus + ":" + elapsed}</Card.Title>
-                <Card.Text>
-                    {stadium} | {city}
-                </Card.Text>
+                <ListGroup className="list-group-flush">
+                    <ListGroup.Item>{"Score:\n" + homeName + ": " + homeGoals} | {awayName + ": " + awayGoals}</ListGroup.Item>
+                    <ListGroup.Item>{"\n" + matchStatus + ":" + elapsed}</ListGroup.Item>
+                    <Card.Title>{stadium + "\n"} {city}</Card.Title>
+                </ListGroup>
             </Card.Body>
         </Card>
     );
