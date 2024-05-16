@@ -134,13 +134,16 @@ function cleanTeamJson(obj) {
 /*
 Player data to return:
 Name
-Position
 Picture
+Position
 Age
+
 Nationality
 Team
+
 Total Shots
 Shots On Goal
+
 Total Goals
 Goals Assists
 
