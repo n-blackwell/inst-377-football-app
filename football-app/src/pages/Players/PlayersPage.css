@@ -1,0 +1,9 @@
+.left-player {
+    float: left;
+    margin-left: 30px;
+}
+
+.right-player {
+    float: right;
+    margin-right: 30px;
+}

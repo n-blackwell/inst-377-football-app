@@ -82,7 +82,7 @@ async function getTeamInfo(teamID, leagueID) {
             .eq('id', data[0]['id'])
             // Returns updated data. Without select, it would not return the new data and would only update the database
             .select()
-        // More unimplemented error handling
+        // If there is an error it returns the original data from the database
         if (upError) {
             return data
         }
@@ -143,6 +143,8 @@ Total Shots
 Shots On Goal
 Total Goals
 Goals Assists
+
+The new function needs to return that information for two players
 
 Lmk if you have questions about implementation or anything else ~Noah
 */
