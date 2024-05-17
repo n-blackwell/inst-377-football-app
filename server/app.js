@@ -3,15 +3,21 @@ const supabaseClient = require("@supabase/supabase-js")
 const bodyParser = require("body-parser")
 const path = require('path');
 
+// To run server + front end seperately:
+// - Make sure Line 18 [app.use(express.static(path.join(__dirname, './client/build')));] is commented out
+// - Make sure Line 20 [app.use(express.static(__dirname + '/public'))] is uncommented
 
+//To run server + front end together
+// Make sure Line 18 [app.use(express.static(path.join(__dirname, './client/build')));] is uncommented 
+// Make sure Line 20 [app.use(express.static(__dirname + '/public'))] is commented out
 
 const app = express()
 const port = 9000
 app.use(bodyParser.json())
 // Serves the front end using the server
-app.use(express.static(path.join(__dirname, './client/build')));
+// app.use(express.static(path.join(__dirname, './client/build')));
 // Runs the server and front-end on seperate local hosts
-// app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/public'))
 
 const supabaseURL = 'https://qrsyjpzbwskvprkogtxa.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyc3lqcHpid3NrdnBya29ndHhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU2MTc3MTEsImV4cCI6MjAzMTE5MzcxMX0.AWplzUF32KSVE69nR13qcOiAiDedtelHlSdbW4nGLOg'
@@ -24,11 +30,6 @@ app.listen(port, () => {
     console.log(`Server Listening on Port ${port}`)
 })
 
-// Lets react handle  the routing between pages
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'));
-});
-
 // API Call for getting team info
 app.get('/team/info', async (req, res) => {
     //Call takes two query paramters: teamID and leagueID
@@ -38,6 +39,7 @@ app.get('/team/info', async (req, res) => {
     //Call a seperate function that gets database data and updates the database if necessary (Line 33 getTeamInfo())
     const data = await getTeamInfo(teamID, leagueID)
     console.log("Sending Team Info")
+    res.header('Content-Type: application/json')
     res.send(JSON.stringify(data))
 })
 
@@ -46,9 +48,15 @@ app.get('/players/info', async (req, res) => {
     console.log("Player ID: ", playerID)
     const data = await getPlayersInfo(playerID);
     console.log("Sending Players Info");
+    res.header('Content-Type: application/json')
     res.send(JSON.stringify(data));
 });
 
+// Lets react handle  the routing between pages
+app.get('*', (req, res) => {
+    console.log("Serving Page")
+    res.sendFile(path.join(__dirname + '/client/build/index.html'));
+});
 
 //Retrieves data from databse and updates the database if the data from the database is old
 async function getTeamInfo(teamID, leagueID) {

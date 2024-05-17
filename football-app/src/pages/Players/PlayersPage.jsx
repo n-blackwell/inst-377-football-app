@@ -10,8 +10,8 @@ function PlayersPage() {
     const [playerData1, setPlayerData1] = useState({})
     const [playerData2, setPlayerData2] = useState({})
     const [isLoading, setIsLoading] = useState(true)
-    const playerUrl1 = 'http://localhost:9000/players/info?playerID=276'
-    const playerUrl2 = 'http://localhost:9000/players/info?playerID=278'
+    const playerUrl1 = '/players/info?playerID=276'
+    const playerUrl2 = '/players/info?playerID=278'
     const testPlayerData = {
         name: "Test Player",
         position: "Forward",
@@ -40,9 +40,15 @@ function PlayersPage() {
     }, [slideCount1, slideCount2]);
 
     const fetchPlayerInfo = async (playerUrl1, playerUrl2) => {
-        const res1 = await fetch(playerUrl1)
-        const data1 = await res1.json()
-
+        let data1
+        let res1
+        try {
+            res1 = await fetch(playerUrl1)
+            data1 = await res1.json()
+        } catch (error) {
+            console.log(error)
+            console.log(res1)
+        }
         const res2 = await fetch(playerUrl2)
         const data2 = await res2.json()
 

@@ -26,7 +26,7 @@ function PlayerData({ playersRes }) {
 function TeamsPage() {
     const apiKey = '2fef88074dmsh152cc0bbbaae36cp19843cjsn22175ba2aeef'
     const playerUrl = "https://api-football-v1.p.rapidapi.com/v3/players/squads?team=85"
-    const statsUrl = "http://localhost:9000/team/info?teamID=85&leagueID=61"
+    const statsUrl = "/team/info?teamID=85&leagueID=61"
 
     const [players, setPlayers] = useState([])
     const [stats, setStats] = useState([])
