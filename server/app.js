@@ -26,6 +26,15 @@ app.get('/team/info', async (req, res) => {
     res.send(JSON.stringify(data))
 })
 
+app.get('/players/info', async (req, res) => {
+    const teamID = req.query.teamID;
+    const leagueID = req.query.leagueID;
+
+    const data = await getPlayersInfo(teamID, leagueID);
+    console.log("Sending Players Info");
+    res.send(JSON.stringify(data));
+});
+
 //Opens server
 app.listen(port, () => {
     console.log(`Server Listening on Port ${port}`)
@@ -98,6 +107,55 @@ async function getTeamInfo(teamID, leagueID) {
     return data
 }
 
+async function getPlayersInfo(teamID, leagueID) {
+    const d = new Date();
+    let year = d.getFullYear() - 1;
+    console.log("Getting Players Info");
+
+    const url = `https://api-football-v1.p.rapidapi.com/v3/players?league=${leagueID}&season=${year}&team=${teamID}`;
+
+    const { data, error } = await supabase
+        .from('players')
+        .select()
+        .eq('team_id', teamID);
+
+    if (error) {
+        return {};
+    }
+
+    const lastEntry = data[0]['created_at'].slice(0, 10);
+    const unixLastEntry = Math.floor(new Date(lastEntry).getTime() / 1000);
+    const unixCurrentTime = Math.floor(new Date().getTime() / 1000);
+
+    if (unixCurrentTime - unixLastEntry >= 84_000) {
+        console.log("Updating Database");
+
+        const res = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': '10755b2a08msh15dff173eafe850p158f43jsnf3d99db20514',
+                'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+            }
+        });
+        const resJson = await res.json();
+
+        const { upData, upError } = await supabase
+            .from('players')
+            .upsert(cleanPlayersJson(resJson))
+            .select();
+
+        if (upError) {
+            return data;
+        }
+        console.log("Returning Updated Data from Database");
+
+        return upData;
+    }
+    console.log("Returning Data from Database");
+
+    return data;
+}
+
 // Takes API Football response data and stores it in a new JSON obj that fits the format required by supabase
 function cleanTeamJson(obj) {
     console.log(obj)
@@ -129,6 +187,29 @@ function cleanTeamJson(obj) {
     console.log('JSON Cleaned')
     // console.log(newObj)
     return newObj
+}
+
+function cleanPlayersJson(obj) {
+    console.log(obj);
+    let newPlayers = [];
+
+    obj['response'].forEach(player => {
+        let newObj = {};
+        newObj["created_at"] = new Date();
+        newObj['name'] = player['player']['name'];
+        newObj['position'] = player['statistics'][0]['games']['position'];
+        newObj['picture'] = player['player']['photo'];
+        newObj['age'] = player['player']['age'];
+        newObj['nationality'] = player['player']['nationality'];
+        newObj['team'] = player['statistics'][0]['team']['name'];
+        newObj['total_shots'] = player['statistics'][0]['shots']['total'];
+        newObj['shots_on_goal'] = player['statistics'][0]['shots']['on'];
+        newObj['total_goals'] = player['statistics'][0]['goals']['total'];
+        newObj['goals_assists'] = player['statistics'][0]['goals']['assists'];
+        newPlayers.push(newObj);
+    });
+    console.log('Players JSON Cleaned');
+    return newPlayers;
 }
 
 /*
