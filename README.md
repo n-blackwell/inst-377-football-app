@@ -13,7 +13,11 @@ For our soccer app, our target browsers are open to iOS, Andriod, and Web browse
 
 # Link to Developer Manual
 
-**NEED TO ADD**
+Located at the bottom half of this file. (down below)
+
+
+---
+
 
 # Developer Manual for our Soccer App
 
