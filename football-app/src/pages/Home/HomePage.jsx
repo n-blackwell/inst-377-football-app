@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from "react-bootstrap/esm/Container";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col';
@@ -31,7 +31,7 @@ function HomePage() {
         setIsLoading(false)
     }
 
-    useMemo(() => {
+    useEffect(() => {
         setFixtureCount(2)
         fetchFixtures(fixtureUrl)
     }, [])
@@ -119,7 +119,7 @@ function HomeCard({ fixtureData, fixtureCount, isLoading }) {
 
 
     return (
-        <Card className="home-cards" style={{ width: '26rem' }}>
+        <Card className="home-cards" style={{ maxWidth: 'fit-content' }}>
             <Card.Img variant="top" height="382px" width="382px" src={(homeGoals > awayGoals) ? homeLogo : awayLogo} />
             <Card.Header>{homeName} vs {awayName}</Card.Header>
             <Card.Body>

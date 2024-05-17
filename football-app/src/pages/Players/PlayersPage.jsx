@@ -12,26 +12,26 @@ function PlayersPage() {
     const [isLoading, setIsLoading] = useState(true)
     const playerUrl1 = '/players/info?playerID=276'
     const playerUrl2 = '/players/info?playerID=278'
-    const testPlayerData = {
-        name: "Test Player",
-        position: "Forward",
-        age: "33",
-        nationality: "American",
-        team: "Real Madrid",
-        total_shots: 132,
-        shots_on_goal: 94,
-        total_goals: 14,
-        goal_assists: 15
+    // const testPlayerData = {
+    //     name: "Test Player",
+    //     position: "Forward",
+    //     age: "33",
+    //     nationality: "American",
+    //     team: "Real Madrid",
+    //     total_shots: 132,
+    //     shots_on_goal: 94,
+    //     total_goals: 14,
+    //     goal_assists: 15
 
-    }
+    // }
 
     useEffect(() => {
         fetchPlayerInfo(playerUrl1, playerUrl2)
     }, [])
 
     useEffect(() => {
-        const interval1 = setInterval(() => setSlideCount1((slideCount1 == 2) ? 0 : slideCount1 + 1), 3000);
-        const interval2 = setInterval(() => setSlideCount2((slideCount2 == 2) ? 0 : slideCount2 + 1), 3000);
+        const interval1 = setInterval(() => setSlideCount1((slideCount1 === 2) ? 0 : slideCount1 + 1), 3000);
+        const interval2 = setInterval(() => setSlideCount2((slideCount2 === 2) ? 0 : slideCount2 + 1), 3000);
 
         return () => {
             clearInterval(interval1);
@@ -84,9 +84,9 @@ function PlayerCard({ slideCount, setSlideCount, playerData, isLoading }) {
         return
     }
     const slideController = (slideCount) => {
-        if (slideCount == 0) {
+        if (slideCount === 0) {
             return ["Nationality: " + playerData.nationality, "Team: " + playerData.team]
-        } else if (slideCount == 1) {
+        } else if (slideCount === 1) {
             return ["Total Goals: " + playerData["total_goals"], "Goal Assists: " + playerData["goals_assists"]]
         } else {
             return ["Total Shots: " + playerData["total_shots"], "Shots on Goal: " + playerData["shots_on_goal"]]
@@ -107,9 +107,9 @@ function PlayerCard({ slideCount, setSlideCount, playerData, isLoading }) {
                 <ListGroup.Item>{slideController(slideCount)[1]}</ListGroup.Item>
                 <ListGroup.Item>
                     <ul className="control-dots">
-                        <li onClick={() => setSlideCount(0)} className={slideCount == 0 ? "control-dot black" : "control-dot"}></li>
-                        <li onClick={() => setSlideCount(1)} className={slideCount == 1 ? "control-dot black" : "control-dot"}></li>
-                        <li onClick={() => setSlideCount(2)} className={slideCount == 2 ? "control-dot black" : "control-dot"}></li>
+                        <li onClick={() => setSlideCount(0)} className={slideCount === 0 ? "control-dot black" : "control-dot"}></li>
+                        <li onClick={() => setSlideCount(1)} className={slideCount === 1 ? "control-dot black" : "control-dot"}></li>
+                        <li onClick={() => setSlideCount(2)} className={slideCount === 2 ? "control-dot black" : "control-dot"}></li>
                     </ul>
                 </ListGroup.Item>
             </ListGroup>

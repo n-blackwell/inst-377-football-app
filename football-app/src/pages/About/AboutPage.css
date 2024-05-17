@@ -1,0 +1,11 @@
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.list-item {
+    text-align: left;
+    margin-bottom: 10px;
+}
