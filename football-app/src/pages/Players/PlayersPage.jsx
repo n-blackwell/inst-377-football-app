@@ -9,7 +9,9 @@ function PlayersPage() {
     const [slideCount2, setSlideCount2] = useState(2);
     const [playerData1, setPlayerData1] = useState({})
     const [playerData2, setPlayerData2] = useState({})
-    const playerUrl = ''
+    const [isLoading, setIsLoading] = useState(true)
+    const playerUrl1 = 'http://localhost:9000/players/info?playerID=276'
+    const playerUrl2 = 'http://localhost:9000/players/info?playerID=278'
     const testPlayerData = {
         name: "Test Player",
         position: "Forward",
@@ -24,6 +26,10 @@ function PlayersPage() {
     }
 
     useEffect(() => {
+        fetchPlayerInfo(playerUrl1, playerUrl2)
+    }, [])
+
+    useEffect(() => {
         const interval1 = setInterval(() => setSlideCount1((slideCount1 == 2) ? 0 : slideCount1 + 1), 3000);
         const interval2 = setInterval(() => setSlideCount2((slideCount2 == 2) ? 0 : slideCount2 + 1), 3000);
 
@@ -33,46 +39,49 @@ function PlayersPage() {
         };
     }, [slideCount1, slideCount2]);
 
-    const updateCardData = () => {
+    const fetchPlayerInfo = async (playerUrl1, playerUrl2) => {
+        const res1 = await fetch(playerUrl1)
+        const data1 = await res1.json()
 
-    }
-    const fetchPlayerInfo = async (playerUrl) => {
-        const res = await fetch(playerUrl)
-        const data = await res.json()
-        setPlayerData1(data[0][0])
-        setPlayerData2(data[0][1])
-        console.log(data)
+        const res2 = await fetch(playerUrl2)
+        const data2 = await res2.json()
+
+        setPlayerData1(data1[0])
+        setPlayerData2(data2[0])
+        console.log(data1, data2)
+        setIsLoading(false)
     }
 
     return (
         <>
             <h1>Players Page</h1>
-            <br />
-            <h1>{[slideCount1, slideCount2]}</h1>
             <div className="left-player">
                 <PlayerCard
                     slideCount={slideCount1}
                     setSlideCount={setSlideCount1}
-                    playerData={testPlayerData}
+                    playerData={playerData1}
                 />
             </div>
             <div className="right-player">
                 <PlayerCard
                     slideCount={slideCount2}
                     setSlideCount={setSlideCount2}
-                    playerData={testPlayerData}
+                    playerData={playerData2}
                 />
             </div>
         </>
     )
 }
 
-function PlayerCard({ slideCount, setSlideCount, playerData }) {
+function PlayerCard({ slideCount, setSlideCount, playerData, isLoading }) {
+    if (isLoading) {
+        return
+    }
     const slideController = (slideCount) => {
         if (slideCount == 0) {
             return ["Nationality: " + playerData.nationality, "Team: " + playerData.team]
         } else if (slideCount == 1) {
-            return ["Total Goals: " + playerData["total_goals"], "Goal Assists: " + playerData["goal_assists"]]
+            return ["Total Goals: " + playerData["total_goals"], "Goal Assists: " + playerData["goals_assists"]]
         } else {
             return ["Total Shots: " + playerData["total_shots"], "Shots on Goal: " + playerData["shots_on_goal"]]
         }
@@ -80,7 +89,7 @@ function PlayerCard({ slideCount, setSlideCount, playerData }) {
 
     return (
         <Card style={{ width: '24rem' }}>
-            <Card.Img variant="top" src={playerData.image} />
+            <Card.Img variant="top" src={playerData.picture} />
             <Card.Body>
                 <Card.Title>{playerData.name}</Card.Title>
                 <Card.Text>

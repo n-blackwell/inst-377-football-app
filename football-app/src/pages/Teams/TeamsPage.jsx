@@ -24,9 +24,9 @@ function PlayerData({ playersRes }) {
 }
 
 function TeamsPage() {
-    const apiKey = '10755b2a08msh15dff173eafe850p158f43jsnf3d99db20514'
-    const playerUrl = "https://api-football-v1.p.rapidapi.com/v3/players/squads?team=33"
-    const statsUrl = "http://localhost:9000/team/info?teamID=33&leagueID=39"
+    const apiKey = '2fef88074dmsh152cc0bbbaae36cp19843cjsn22175ba2aeef'
+    const playerUrl = "https://api-football-v1.p.rapidapi.com/v3/players/squads?team=85"
+    const statsUrl = "http://localhost:9000/team/info?teamID=85&leagueID=61"
 
     const [players, setPlayers] = useState([])
     const [stats, setStats] = useState([])
@@ -35,7 +35,7 @@ function TeamsPage() {
         const res = await fetch(playerUrl, {
             method: 'GET',
             headers: {
-                'X-RapidAPI-Key': '10755b2a08msh15dff173eafe850p158f43jsnf3d99db20514',
+                'X-RapidAPI-Key': '2fef88074dmsh152cc0bbbaae36cp19843cjsn22175ba2aeef',
                 'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
             }
         })
@@ -52,13 +52,17 @@ function TeamsPage() {
     }
 
     useEffect(() => {
-        // fetchPlayers(playerUrl)
+        fetchPlayers(playerUrl)
         fetchTeamStats(statsUrl)
     }, [])
 
     return (
         <>
-            <h1 style={{ marginLeft: 10 }}>Teams Page</h1>
+            <div className='top-section'>
+                <h1 style={{ marginLeft: 10 }}>Teams Page</h1>
+                <img src={stats['logo']} alt="" />
+                <span><strong>{stats['team_name']}</strong></span>
+            </div>
             <div className="roster-table">
                 <span><strong>Roster</strong></span>
                 <Table striped bordered>

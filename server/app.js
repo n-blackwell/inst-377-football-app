@@ -14,6 +14,11 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 // Creates connection to database
 const supabase = supabaseClient.createClient(supabaseURL, supabaseKey)
 
+//Opens server
+app.listen(port, () => {
+    console.log(`Server Listening on Port ${port}`)
+})
+
 // API Call for getting team info
 app.get('/team/info', async (req, res) => {
     //Call takes two query paramters: teamID and leagueID
@@ -27,18 +32,13 @@ app.get('/team/info', async (req, res) => {
 })
 
 app.get('/players/info', async (req, res) => {
-    const teamID = req.query.teamID;
-    const leagueID = req.query.leagueID;
-
-    const data = await getPlayersInfo(teamID, leagueID);
+    const playerID = req.query.playerID
+    console.log("Player ID: ", playerID)
+    const data = await getPlayersInfo(playerID);
     console.log("Sending Players Info");
     res.send(JSON.stringify(data));
 });
 
-//Opens server
-app.listen(port, () => {
-    console.log(`Server Listening on Port ${port}`)
-})
 
 //Retrieves data from databse and updates the database if the data from the database is old
 async function getTeamInfo(teamID, leagueID) {
@@ -74,7 +74,7 @@ async function getTeamInfo(teamID, leagueID) {
         const res = await fetch(url, {
             method: 'GET',
             headers: {
-                'X-RapidAPI-Key': '10755b2a08msh15dff173eafe850p158f43jsnf3d99db20514',
+                'X-RapidAPI-Key': '2fef88074dmsh152cc0bbbaae36cp19843cjsn22175ba2aeef',
                 'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
             }
         })
@@ -99,7 +99,7 @@ async function getTeamInfo(teamID, leagueID) {
         // console.log(upData)
 
         //Returns new data 
-        return upData
+        return upData[0]
     }
     console.log("Returning Data from Database")
 
@@ -107,18 +107,18 @@ async function getTeamInfo(teamID, leagueID) {
     return data
 }
 
-async function getPlayersInfo(teamID, leagueID) {
+async function getPlayersInfo(playerID) {
     const d = new Date();
     let year = d.getFullYear() - 1;
     console.log("Getting Players Info");
 
-    const url = `https://api-football-v1.p.rapidapi.com/v3/players?league=${leagueID}&season=${year}&team=${teamID}`;
+    const url = `https://api-football-v1.p.rapidapi.com/v3/players?id=${playerID}&season=${year}`;
 
     const { data, error } = await supabase
         .from('players')
         .select()
-        .eq('team_id', teamID);
-
+        .eq('player_id', playerID);
+    console.log("Supabase Data Pulled Down")
     if (error) {
         return {};
     }
@@ -133,23 +133,23 @@ async function getPlayersInfo(teamID, leagueID) {
         const res = await fetch(url, {
             method: 'GET',
             headers: {
-                'X-RapidAPI-Key': '10755b2a08msh15dff173eafe850p158f43jsnf3d99db20514',
+                'X-RapidAPI-Key': '2fef88074dmsh152cc0bbbaae36cp19843cjsn22175ba2aeef',
                 'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
             }
         });
         const resJson = await res.json();
-
         const { upData, upError } = await supabase
             .from('players')
-            .upsert(cleanPlayersJson(resJson))
+            .update(cleanPlayersJson(resJson))
+            .eq("id", data[0]['id'])
             .select();
 
         if (upError) {
             return data;
         }
-        console.log("Returning Updated Data from Database");
-
-        return upData;
+        console.log("Returning Updated Data from Database",);
+        console.log(upData)
+        return upData[0];
     }
     console.log("Returning Data from Database");
 
@@ -190,26 +190,22 @@ function cleanTeamJson(obj) {
 }
 
 function cleanPlayersJson(obj) {
-    console.log(obj);
-    let newPlayers = [];
-
-    obj['response'].forEach(player => {
-        let newObj = {};
-        newObj["created_at"] = new Date();
-        newObj['name'] = player['player']['name'];
-        newObj['position'] = player['statistics'][0]['games']['position'];
-        newObj['picture'] = player['player']['photo'];
-        newObj['age'] = player['player']['age'];
-        newObj['nationality'] = player['player']['nationality'];
-        newObj['team'] = player['statistics'][0]['team']['name'];
-        newObj['total_shots'] = player['statistics'][0]['shots']['total'];
-        newObj['shots_on_goal'] = player['statistics'][0]['shots']['on'];
-        newObj['total_goals'] = player['statistics'][0]['goals']['total'];
-        newObj['goals_assists'] = player['statistics'][0]['goals']['assists'];
-        newPlayers.push(newObj);
-    });
+    console.log(obj)
+    let newObj = {};
+    newObj["created_at"] = new Date();
+    newObj['name'] = obj['response'][0]['player']['name'] + " " + obj['response'][0]['player']['lastname'];
+    newObj['position'] = obj['response'][0]['statistics'][0]['games']['position'];
+    newObj['picture'] = obj['response'][0]['player']['photo'];
+    newObj['age'] = obj['response'][0]['player']['age'];
+    newObj['nationality'] = obj['response'][0]['player']['nationality'];
+    newObj['team'] = obj['response'][0]['statistics'][0]['team']['name'];
+    newObj['total_shots'] = obj['response'][0]['statistics'][0]['shots']['total'];
+    newObj['shots_on_goal'] = obj['response'][0]['statistics'][0]['shots']['on'];
+    newObj['total_goals'] = obj['response'][0]['statistics'][0]['goals']['total'];
+    newObj['goals_assists'] = obj['response'][0]['statistics'][0]['goals']['assists'];
     console.log('Players JSON Cleaned');
-    return newPlayers;
+    console.log(newObj)
+    return newObj;
 }
 
 /*
@@ -228,7 +224,6 @@ Shots On Goal
 Total Goals
 Goals Assists
 
-The new function needs to return that information for two players
 
 Lmk if you have questions about implementation or anything else ~Noah
 */

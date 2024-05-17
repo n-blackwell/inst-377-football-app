@@ -12,6 +12,10 @@
     animation: fade-in 3s;
 }
 
+.home-card-score {
+    font-size: .85rem;
+}
+
 @keyframes fade-in {
     from {
         opacity: 0;

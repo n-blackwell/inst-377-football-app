@@ -13,6 +13,14 @@
     height: 50%
 }
 
+.top-section span {
+    font-size: 2em;
+}
+
+.top-section img {
+    margin-right: 15px;
+}
+
 #caption {
     caption-side: top;
 }

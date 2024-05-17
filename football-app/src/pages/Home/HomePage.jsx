@@ -25,7 +25,6 @@ function HomePage() {
             }
         })
         let data = await res.json()
-        console.log("response data ", data)
         data = data['response']
         setFixtureData(data)
         setMaxFixtureCount(Object.keys(fixtureData).length)
@@ -39,7 +38,6 @@ function HomePage() {
 
     useEffect(() => {
         const interval1 = setInterval(() => setFixtureCount((fixtureCount === maxFixtureCount) ? 0 : fixtureCount + 3), 10000);
-        console.log(fixtureCount)
 
         return () => {
             clearInterval(interval1);
@@ -101,27 +99,32 @@ function HomeCard({ fixtureData, fixtureCount, isLoading }) {
     if (isLoading) {
         return
     }
-    console.log('done loading')
 
     const homeName = fixtureData[fixtureCount]['teams']['home']['name']
     const awayName = fixtureData[fixtureCount]['teams']['away']['name']
-    const homeGoals = fixtureData[fixtureCount]['goals']['home']
-    const awayGoals = fixtureData[fixtureCount]['goals']['home']
+    const homeGoals = (fixtureData[fixtureCount]['goals']['home'] != null) ? fixtureData[fixtureCount]['goals']['home'] : '-'
+    const awayGoals = (fixtureData[fixtureCount]['goals']['away'] != null) ? fixtureData[fixtureCount]['goals']['away'] : '-'
     const homeLogo = fixtureData[fixtureCount]['teams']['home']['logo']
-    const awayLogo = fixtureData[fixtureCount]['teams']['home']['logo']
-    const stadium = fixtureData[fixtureCount]['fixture']['venue']['name']
-    const city = fixtureData[fixtureCount]['fixture']['venue']['city']
+    const awayLogo = fixtureData[fixtureCount]['teams']['away']['logo']
+    let city = ''
+    let stadium = ''
+    if ((fixtureData[fixtureCount]['fixture']['venue']['name'] || fixtureData[fixtureCount]['fixture']['venue']['city']) != null) {
+        stadium = fixtureData[fixtureCount]['fixture']['venue']['name']
+        city = fixtureData[fixtureCount]['fixture']['venue']['city']
+    } else {
+        stadium = 'TBD'
+    }
     const matchStatus = fixtureData[fixtureCount]['fixture']['status']['short']
-    const elapsed = fixtureData[fixtureCount]['fixture']['status']['elapsed']
+    const elapsed = (fixtureData[fixtureCount]['fixture']['status']['elapsed'] != null) ? fixtureData[fixtureCount]['fixture']['status']['elapsed'] : '-'
 
 
     return (
-        <Card style={{ width: '24rem' }}>
+        <Card className="home-cards" style={{ width: '26rem' }}>
             <Card.Img variant="top" height="382px" width="382px" src={(homeGoals > awayGoals) ? homeLogo : awayLogo} />
             <Card.Header>{homeName} vs {awayName}</Card.Header>
             <Card.Body>
                 <ListGroup className="list-group-flush">
-                    <ListGroup.Item>{"Score:\n" + homeName + ": " + homeGoals} | {awayName + ": " + awayGoals}</ListGroup.Item>
+                    <ListGroup.Item className='home-card-score'>{"Score:\n" + homeName + ": " + homeGoals} | {awayName + ": " + awayGoals}</ListGroup.Item>
                     <ListGroup.Item>{"\n" + matchStatus + ":" + elapsed}</ListGroup.Item>
                     <Card.Title>{stadium + "\n"} {city}</Card.Title>
                 </ListGroup>
