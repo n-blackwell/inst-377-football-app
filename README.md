@@ -53,11 +53,17 @@ In order to begin using our Soccer App, you have to install all our app and its 
 
 6. Our Soccer App server provides the following API endpoints:
 
-`GET /`: Retrieves home page.
-`GET /Teams`: Retrieves a teams page.
-`GET /Players:` Retrieves a player's page with player information.
-`GET /About`: Retrieves about page.
+
+`GET /`: Retrieves home page. **Handled by React Router**
+
+`GET /Teams`: Retrieves a teams page. **Handled by React Router**
+
+`GET /Players:` Retrieves a player's page with player information. **Handled by React Router**
+
+`GET /About`: Retrieves about page. **Handled by React Router**
+
 `GET /players/info?playerid=x`: Retrieves Player data from database and updates entry if it is > 24 hours old.
+
 `GET /players/info?teamid=x&leagueid=y`: Retrieves teams data from database and updates entry if it is > 24 hours old..
 
 Each endpoint performs the specified action related to soccer content management.
