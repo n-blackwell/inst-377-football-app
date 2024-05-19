@@ -39,7 +39,9 @@ In order to begin using our Soccer App, you have to install all our app and its 
 ## b. Running Soccer App on a Server
 
 4. Now, to run our Soccer App on a server, use these commands:
+
 `cd server` **This will bring you to the correct directory.**
+
 `npm start` **This will start the server and make the application accessible through a web browser.**
 
 ## c. Running Tests
