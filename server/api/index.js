@@ -28,7 +28,7 @@ const supabase = supabaseClient.createClient(supabaseURL, supabaseKey)
 
 app.get('/', (req, res) => {
     console.log("Serving Page")
-    res.sendFile(path.join(__dirname + '/build/index_build.html'));
+    res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 
 // API Call for getting team info
@@ -56,7 +56,7 @@ app.get('/players/info', async (req, res) => {
 // Lets react handle  the routing between pages
 app.get('*', (req, res) => {
     console.log("Serving Page")
-    res.sendFile(path.join(__dirname + '/build/index_build.html'));
+    res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 
 //Retrieves data from databse and updates the database if the data from the database is old
@@ -118,6 +118,7 @@ async function getTeamInfo(teamID, leagueID) {
         // console.log(upData)
 
         //Returns new data 
+        console.log(upData[0])
         return upData[0]
     }
     console.log("Returning Data from Database")
@@ -168,7 +169,7 @@ async function getPlayersInfo(playerID) {
         }
         console.log("Returning Updated Data from Database",);
         console.log(upData)
-        return upData[0];
+        return upData;
     }
     console.log("Returning Data from Database");
 
@@ -233,7 +234,7 @@ app.listen(port, () => {
 })
 
 
-export default app
+// export default app
 /*
 Player data to return:
 Name
