@@ -83,3 +83,6 @@ Enhancing UI/UX for a better user experience.
 Adding a live match update to scores, teams, standings, players, etc.
 Integrating user authentication for personalized content.
 Support additonal languages.
+Allowing users to choose the teams and players they would like to follow.
+Adding League tracking.
+Adding Login for personalized user accounts.
