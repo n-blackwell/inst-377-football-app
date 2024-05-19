@@ -39,6 +39,7 @@ In order to begin using our Soccer App, you have to install all our app and its 
 ## b. Running Soccer App on a Server
 
 4. Now, to run our Soccer App on a server, use these commands:
+`cd server` **This will bring you to the correct directory.**
 `npm start` **This will start the server and make the application accessible through a web browser.**
 
 ## c. Running Tests
@@ -54,6 +55,8 @@ In order to begin using our Soccer App, you have to install all our app and its 
 `GET /Teams`: Retrieves a teams page.
 `GET /Players:` Retrieves a player's page with player information.
 `GET /About`: Retrieves about page.
+`GET /players/info?playerid=x`: Retrieves Player data from database and updates entry if it is > 24 hours old.
+`GET /players/info?teamid=x&leagueid=y`: Retrieves teams data from database and updates entry if it is > 24 hours old..
 
 Each endpoint performs the specified action related to soccer content management.
 
